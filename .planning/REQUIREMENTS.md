@@ -100,42 +100,42 @@ Deferred to future release. Tracked but not in current roadmap.
 |-------------|-------|--------|
 | TECH-01 | Phase 1 | Pending |
 | NOTIF-01 | Phase 2 | Pending |
+| TOAST-01 | Phase 2 | Pending |
+| TOAST-02 | Phase 2 | Pending |
+| TECH-03 | Phase 2 | Pending |
+| TECH-04 | Phase 2 | Pending |
+| INST-06 | Phase 2 | Pending |
+| INST-08 | Phase 2 | Pending |
 | NOTIF-02 | Phase 3 | Pending |
 | NOTIF-03 | Phase 3 | Pending |
 | NOTIF-04 | Phase 3 | Pending |
 | NOTIF-05 | Phase 3 | Pending |
-| NOTIF-06 | Phase 4 | Pending |
-| NOTIF-07 | Phase 4 | Pending |
-| NOTIF-08 | Phase 5 | Pending |
-| TOAST-01 | Phase 2 | Pending |
-| TOAST-02 | Phase 2 | Pending |
 | TOAST-03 | Phase 3 | Pending |
 | TOAST-04 | Phase 3 | Pending |
-| TOAST-05 | Phase 6 | Pending |
+| TECH-05 | Phase 3 | Pending |
 | FOCUS-01 | Phase 4 | Pending |
 | FOCUS-02 | Phase 4 | Pending |
-| FOCUS-03 | Phase 5 | Pending |
-| FOCUS-04 | Phase 5 | Pending |
 | FOCUS-05 | Phase 4 | Pending |
 | FOCUS-06 | Phase 4 | Pending |
 | TECH-02 | Phase 4 | Pending |
-| TECH-03 | Phase 2 | Pending |
-| TECH-04 | Phase 2 | Pending |
-| TECH-05 | Phase 3 | Pending |
-| INST-01 | Phase 7 | Pending |
-| INST-02 | Phase 7 | Pending |
-| INST-03 | Phase 7 | Pending |
-| INST-04 | Phase 7 | Pending |
-| INST-05 | Phase 7 | Pending |
-| INST-06 | Phase 2 | Pending |
-| INST-07 | Phase 7 | Pending |
-| INST-08 | Phase 2 | Pending |
+| FOCUS-03 | Phase 5 | Pending |
+| FOCUS-04 | Phase 5 | Pending |
+| NOTIF-06 | Phase 6 | Pending |
+| NOTIF-07 | Phase 6 | Pending |
+| NOTIF-08 | Phase 7 | Pending |
+| TOAST-05 | Phase 7 | Pending |
+| INST-01 | Phase 8 | Pending |
+| INST-02 | Phase 8 | Pending |
+| INST-03 | Phase 8 | Pending |
+| INST-04 | Phase 8 | Pending |
+| INST-05 | Phase 8 | Pending |
+| INST-07 | Phase 8 | Pending |
 
 **Coverage:**
-- v1 requirements: 30 total
-- Mapped to phases: 30
-- Unmapped: 0 ✓
+- v1 requirements: 32 total
+- Mapped to phases: 32
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-05-15*
-*Last updated: 2026-05-15 after initial definition*
+*Last updated: 2026-05-15 after roadmap creation*
