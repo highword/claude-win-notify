@@ -32,7 +32,11 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. Protocol activation (`claude-notify://`) launches the exe and receives URI arguments
   3. SetForegroundWindow (with fallback chain) successfully brings a window to foreground from a protocol-activated process
   4. Decision documented: chosen stack with evidence from spike results
-**Plans**: TBD
+**Plans**:
+  - **Wave 1:** 01-A (Environment Setup & Project Scaffolding)
+  - **Wave 2:** 01-B (Toast Notification Validation), 01-C (Protocol Activation Validation) *(blocked on Wave 1 completion)*
+  - **Wave 3:** 01-D (SetForegroundWindow Validation) *(blocked on Waves 1+2)*
+  - **Wave 4:** 01-E (Comparison Report & Stack Decision) *(blocked on all prior waves)*
 
 ### Phase 2: Hook & Toast Foundation
 **Goal**: The basic pipeline works end-to-end: Claude Code hook triggers exe, exe reads stdin, exe shows a Toast
@@ -122,7 +126,7 @@ Note: Phase 6 depends on Phase 3 (not Phase 5), so Phases 5 and 6 could theoreti
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Tech Spike | 0/TBD | Not started | - |
+| 1. Tech Spike | 1/5 | In Progress | - |
 | 2. Hook & Toast Foundation | 0/TBD | Not started | - |
 | 3. Notification Type Detection | 0/TBD | Not started | - |
 | 4. Click-to-Focus Window Level | 0/TBD | Not started | - |
