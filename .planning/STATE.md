@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-05-15)
 ## Current Position
 
 Phase: 1 of 8 (Tech Spike)
-Plan: 4 of 5 complete in current phase
-Status: Executing (Wave 3 complete)
-Last activity: 2026-05-20 — Plan 01-D (SetForegroundWindow) executed
+Plan: 5 of 5 complete in current phase
+Status: All plans complete, pending verification
+Last activity: 2026-05-20 — All 5 plans executed, Rust selected as production stack
 
-Progress: [████████░░] 80%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -42,12 +42,12 @@ Progress: [████████░░] 80%
 Decisions are logged in PROJECT.md Key Decisions table.
 Recent decisions affecting current work:
 
-- Tech stack undecided: Phase 1 spike will determine C# NativeAOT vs Rust
+- **Tech stack: Rust** — confirmed 2026-05-20, all integration points validated
 - Architecture: fire-and-forget hook execution + Protocol activation (no daemon)
 - Go eliminated: architectural inability to receive COM callbacks
-- Toast validated: Both C# NativeAOT (3.22 MB) and Rust (0.14 MB) work via WinRT
-- Protocol activation validated: Both stacks parse claude-notify:// URIs correctly
-- SetForegroundWindow validated: Both stacks pass all 4 focus scenarios (Strategy 1 direct)
+- Toast validated: Rust 0.38 MB via windows-rs WinRT
+- Protocol activation validated: Rust parses claude-notify:// URIs correctly
+- SetForegroundWindow validated: Rust passes all 4 focus scenarios (Strategy 1 direct)
 
 ### Pending Todos
 
@@ -55,10 +55,8 @@ None yet.
 
 ### Blockers/Concerns
 
-- NativeAOT COM interop risk: "No built-in COM" may force Rust fallback
-- SetForegroundWindow from protocol-activated process may lack foreground rights
-- Warp accessibility tree may not expose TabItem pattern
-- CJK encoding on Windows stdin: UTF-8 vs system codepage unknown
+- Warp accessibility tree may not expose TabItem pattern (Phase 5 risk)
+- Interactive Toast COM callback in Rust requires manual trait impl or protocol URI workaround (Phase 9 risk)
 
 ## Deferred Items
 
