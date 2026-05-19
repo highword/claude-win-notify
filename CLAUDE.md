@@ -31,3 +31,9 @@ Phase 1: Tech Spike — validate C# NativeAOT vs Rust
 - **Tech stack:** TBD (Phase 1 spike will determine)
 - **Target:** Windows 10 1903+ / Windows 11
 - **License:** MIT
+
+## Branching Strategy
+
+- **Phase 1 (Tech Spike):** Work directly on `main`
+- **Phase 2+:** Create a branch per phase (e.g., `phase/02-hook-toast`, `phase/03-notification-types`), merge back to `main` via PR when phase completes
+- Branch naming: `phase/{NN}-{short-slug}`
