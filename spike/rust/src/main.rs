@@ -13,6 +13,12 @@ use windows::Win32::UI::WindowsAndMessaging::*;
 fn main() -> Result<()> {
     let args: Vec<String> = env::args().collect();
 
+    // Quick exit: --version flag for startup timing
+    if args.len() >= 2 && args[1] == "--version" {
+        println!("RustSpike v0.1");
+        return Ok(());
+    }
+
     // Mode 2: Protocol activation — parse URI from --focus argument
     if args.len() >= 3 && args[1] == "--focus" {
         return handle_focus(&args[2]);
