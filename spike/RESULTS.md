@@ -1,5 +1,9 @@
 # Tech Spike Results: C# NativeAOT vs Rust
 
+> **DECISION: Rust** — Recommended as production stack. Enterprise control is a tie (D-10);
+> Rust wins on secondary factors (D-11): 8.6x smaller binary, simpler build chain, memory safety.
+> Pending user confirmation per D-17 (collaborative execution).
+
 **Date:** 2026-05-20
 **Tester:** Yanwei Gu (automated spike)
 **Environment:** Windows 11 Pro 10.0.26200, Intel Core i5-12600KF, 32 GB RAM
