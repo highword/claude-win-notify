@@ -1,8 +1,14 @@
 use std::env;
+use std::thread;
+use std::time::Duration;
 use url::Url;
 use windows::core::*;
 use windows::Data::Xml::Dom::XmlDocument;
 use windows::UI::Notifications::{ToastNotification, ToastNotificationManager};
+use windows::Win32::Foundation::*;
+use windows::Win32::System::Threading::{AttachThreadInput, GetCurrentThreadId};
+use windows::Win32::UI::Input::KeyboardAndMouse::*;
+use windows::Win32::UI::WindowsAndMessaging::*;
 
 fn main() -> Result<()> {
     let args: Vec<String> = env::args().collect();
@@ -25,7 +31,7 @@ fn handle_focus(uri_str: &str) -> Result<()> {
         .map(|(_, v)| v.to_string())
         .unwrap_or_else(|| "unknown".to_string());
 
-    let pid = url
+    let pid_str = url
         .query_pairs()
         .find(|(k, _)| k == "pid")
         .map(|(_, v)| v.to_string())
@@ -34,7 +40,7 @@ fn handle_focus(uri_str: &str) -> Result<()> {
     println!("PROTOCOL ACTIVATED:");
     println!("  Full URI: {}", uri_str);
     println!("  Session: {}", session);
-    println!("  PID: {}", pid);
+    println!("  PID: {}", pid_str);
 
     // Print any additional parameters (e.g., cwd with CJK characters)
     for (key, value) in url.query_pairs() {
@@ -43,8 +49,143 @@ fn handle_focus(uri_str: &str) -> Result<()> {
         }
     }
 
-    println!("SUCCESS: Protocol activation parsed correctly (Rust)");
+    // --- SetForegroundWindow with fallback chain ---
+    let target_pid: u32 = pid_str.parse().unwrap_or(0);
+    if target_pid > 0 {
+        println!("\nFOCUS: Attempting to bring PID {} to foreground...", target_pid);
+
+        let hwnd = find_window_by_pid(target_pid);
+        match hwnd {
+            None => {
+                println!("  ERROR: No visible window found for PID {}", target_pid);
+                std::process::exit(1);
+            }
+            Some(hwnd) => {
+                println!("  Found window handle: 0x{:X}", hwnd.0 as usize);
+                let success = focus_window(hwnd);
+                thread::sleep(Duration::from_millis(100));
+
+                let fg_after = unsafe { GetForegroundWindow() };
+                let verified = fg_after == hwnd;
+                println!("  Foreground after focus: 0x{:X}", fg_after.0 as usize);
+                if verified {
+                    println!("  RESULT: PASS (foreground verified)");
+                } else if success {
+                    println!("  RESULT: PARTIAL (strategy reported success but foreground mismatch)");
+                    std::process::exit(2);
+                } else {
+                    println!("  RESULT: FLASH (taskbar flash only)");
+                    std::process::exit(2);
+                }
+            }
+        }
+    } else {
+        println!("SUCCESS: Protocol activation parsed correctly (Rust)");
+    }
+
     Ok(())
+}
+
+fn find_window_by_pid(target_pid: u32) -> Option<HWND> {
+    // Use raw pointer via LPARAM to pass data to the EnumWindows callback
+    struct EnumData {
+        target_pid: u32,
+        found: HWND,
+    }
+
+    let mut data = EnumData {
+        target_pid,
+        found: HWND::default(),
+    };
+
+    unsafe extern "system" fn enum_proc(hwnd: HWND, lparam: LPARAM) -> BOOL {
+        let data = &mut *(lparam.0 as *mut EnumData);
+        let mut pid: u32 = 0;
+        GetWindowThreadProcessId(hwnd, Some(&mut pid));
+        if pid == data.target_pid && IsWindowVisible(hwnd).as_bool() {
+            data.found = hwnd;
+            return BOOL::from(false); // stop enumeration
+        }
+        BOOL::from(true) // continue
+    }
+
+    unsafe {
+        let _ = EnumWindows(
+            Some(enum_proc),
+            LPARAM(&mut data as *mut EnumData as isize),
+        );
+    }
+
+    if data.found.0 == std::ptr::null_mut() {
+        None
+    } else {
+        Some(data.found)
+    }
+}
+
+fn focus_window(hwnd: HWND) -> bool {
+    unsafe {
+        // Restore if minimized
+        if IsIconic(hwnd).as_bool() {
+            println!("  Window is minimized, restoring...");
+            let _ = ShowWindow(hwnd, SW_RESTORE);
+            thread::sleep(Duration::from_millis(50));
+        }
+
+        // Strategy 1: Direct SetForegroundWindow
+        let _ = SetForegroundWindow(hwnd);
+        thread::sleep(Duration::from_millis(50));
+        if GetForegroundWindow() == hwnd {
+            println!("  Strategy 1 (direct): SUCCESS");
+            return true;
+        }
+
+        // Strategy 2: AttachThreadInput
+        let fg_hwnd = GetForegroundWindow();
+        let fg_tid = GetWindowThreadProcessId(fg_hwnd, None);
+        let our_tid = GetCurrentThreadId();
+        let _ = AttachThreadInput(our_tid, fg_tid, true);
+        let _ = SetForegroundWindow(hwnd);
+        let _ = AttachThreadInput(our_tid, fg_tid, false);
+        thread::sleep(Duration::from_millis(50));
+        if GetForegroundWindow() == hwnd {
+            println!("  Strategy 2 (AttachThreadInput): SUCCESS");
+            return true;
+        }
+
+        // Strategy 3: Alt key hack
+        keybd_event(
+            VK_MENU.0 as u8,
+            0,
+            KEYBD_EVENT_FLAGS(KEYEVENTF_EXTENDEDKEY.0),
+            0,
+        );
+        keybd_event(
+            VK_MENU.0 as u8,
+            0,
+            KEYBD_EVENT_FLAGS(KEYEVENTF_KEYUP.0),
+            0,
+        );
+        let _ = SetForegroundWindow(hwnd);
+        thread::sleep(Duration::from_millis(50));
+        if GetForegroundWindow() == hwnd {
+            println!("  Strategy 3 (Alt key hack): SUCCESS");
+            return true;
+        }
+
+        // Strategy 4: Minimize then restore
+        let _ = ShowWindow(hwnd, SW_MINIMIZE);
+        thread::sleep(Duration::from_millis(50));
+        let _ = ShowWindow(hwnd, SW_RESTORE);
+        thread::sleep(Duration::from_millis(50));
+        if GetForegroundWindow() == hwnd {
+            println!("  Strategy 4 (minimize/restore): SUCCESS");
+            return true;
+        }
+
+        println!("  All strategies attempted, window may only flash in taskbar");
+        false
+    }
 }
 
 fn show_toast() -> Result<()> {
