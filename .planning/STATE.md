@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-05-15)
 
 **Core value:** Click-to-Focus 在 Windows 上真正可用——通知弹出后点击即可跳转到正确的终端窗口和标签页
-**Current focus:** Phase 1 - Tech Spike
+**Current focus:** Phase 2 - Hook & Toast Foundation
 
 ## Current Position
 
-Phase: 1 of 8 (Tech Spike)
-Plan: 5 of 5 complete in current phase
-Status: All plans complete, pending verification
-Last activity: 2026-05-20 — All 5 plans executed, Rust selected as production stack
+Phase: 2 of 8 (Hook & Toast Foundation)
+Plan: 0 of ? — plans not yet created
+Status: Ready to plan
+Last activity: 2026-05-20 — Phase 1 complete, Rust confirmed
 
-Progress: [██████████] 100%
+Progress: [░░░░░░░░░░] 0%
 
 ## Performance Metrics
 
@@ -69,5 +69,5 @@ Items acknowledged and carried forward from previous milestone close:
 ## Session Continuity
 
 Last session: 2026-05-20
-Stopped at: Wave 3 complete (01-D), Wave 4 next (01-E Comparison Report)
+Stopped at: Phase 1 complete, Phase 2 ready to discuss/plan
 Resume file: None

@@ -12,7 +12,7 @@ From tech spike to shipping installer: validate the Windows-native stack (C# Nat
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Tech Spike** - Validate C# NativeAOT vs Rust for Toast + Protocol activation + SetForegroundWindow
+- [x] **Phase 1: Tech Spike** - Validate C# NativeAOT vs Rust for Toast + Protocol activation + SetForegroundWindow ✓ 2026-05-20
 - [ ] **Phase 2: Hook & Toast Foundation** - Hook reads stdin JSON and displays a basic Windows Toast notification
 - [ ] **Phase 3: Notification Type Detection** - All 4 notification types detected and displayed with distinct visuals and sounds
 - [ ] **Phase 4: Click-to-Focus Window Level** - Toast click activates the correct terminal window via Protocol activation
