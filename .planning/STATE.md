@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-05-15)
 ## Current Position
 
 Phase: 1 of 8 (Tech Spike)
-Plan: 3 of 5 complete in current phase
-Status: Executing (Wave 2 complete)
-Last activity: 2026-05-20 — Plans 01-B (Toast) and 01-C (Protocol) executed
+Plan: 4 of 5 complete in current phase
+Status: Executing (Wave 3 complete)
+Last activity: 2026-05-20 — Plan 01-D (SetForegroundWindow) executed
 
-Progress: [██████░░░░] 60%
+Progress: [████████░░] 80%
 
 ## Performance Metrics
 
@@ -47,6 +47,7 @@ Recent decisions affecting current work:
 - Go eliminated: architectural inability to receive COM callbacks
 - Toast validated: Both C# NativeAOT (3.22 MB) and Rust (0.14 MB) work via WinRT
 - Protocol activation validated: Both stacks parse claude-notify:// URIs correctly
+- SetForegroundWindow validated: Both stacks pass all 4 focus scenarios (Strategy 1 direct)
 
 ### Pending Todos
 
@@ -70,5 +71,5 @@ Items acknowledged and carried forward from previous milestone close:
 ## Session Continuity
 
 Last session: 2026-05-20
-Stopped at: Wave 2 complete (01-B, 01-C), Wave 3 next (01-D SetForegroundWindow)
+Stopped at: Wave 3 complete (01-D), Wave 4 next (01-E Comparison Report)
 Resume file: None
