@@ -70,5 +70,5 @@ Items acknowledged and carried forward from previous milestone close:
 ## Session Continuity
 
 Last session: 2026-05-20
-Stopped at: Phase 2 complete, ready for Phase 3
-Resume file: .planning/ROADMAP.md
+Stopped at: Phase 3 context gathered
+Resume file: .planning/phases/03-notification-types/03-CONTEXT.md
