@@ -11,12 +11,14 @@ pub enum NotificationType {
 
 /// Conservative set of system-level error patterns.
 /// Only matches Claude Code infrastructure errors, never user-mentioned errors.
+/// Patterns are chosen to avoid false positives on user task descriptions (D-03).
 const ERROR_PATTERNS: &[&str] = &[
     "api rate limit",
     "rate limit exceeded",
     "session limit",
     "context window",
-    "api error",
+    "api error:",
+    "api error occurred",
     "authentication failed",
 ];
 
@@ -137,5 +139,135 @@ pub fn body_text(ntype: NotificationType, input: &HookInput) -> String {
                 "An error occurred".to_string()
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::hook::HookInput;
+
+    /// Helper to create a minimal HookInput for Stop events.
+    fn stop_input(last_assistant_message: Option<&str>) -> HookInput {
+        HookInput {
+            session_id: "test".to_string(),
+            transcript_path: "/tmp/t.jsonl".to_string(),
+            cwd: "/tmp/project".to_string(),
+            hook_event_name: "Stop".to_string(),
+            stop_hook_active: Some(false),
+            last_assistant_message: last_assistant_message.map(|s| s.to_string()),
+            message: None,
+            title: None,
+            notification_type: None,
+            permission_mode: None,
+        }
+    }
+
+    /// Helper to create a minimal HookInput for Notification events.
+    fn notification_input(
+        notification_type: Option<&str>,
+        message: Option<&str>,
+    ) -> HookInput {
+        HookInput {
+            session_id: "test".to_string(),
+            transcript_path: "/tmp/t.jsonl".to_string(),
+            cwd: "/tmp/project".to_string(),
+            hook_event_name: "Notification".to_string(),
+            stop_hook_active: None,
+            last_assistant_message: None,
+            message: message.map(|s| s.to_string()),
+            title: None,
+            notification_type: notification_type.map(|s| s.to_string()),
+            permission_mode: None,
+        }
+    }
+
+    #[test]
+    fn stop_default_is_task_complete() {
+        let input = stop_input(Some("All done, files updated successfully."));
+        assert_eq!(classify_stop(&input), NotificationType::TaskComplete);
+    }
+
+    #[test]
+    fn stop_with_api_rate_limit_is_error() {
+        let input = stop_input(Some("Hit the API rate limit, please wait."));
+        assert_eq!(classify_stop(&input), NotificationType::Error);
+    }
+
+    #[test]
+    fn stop_with_session_limit_is_error() {
+        let input = stop_input(Some("Reached the session limit for today."));
+        assert_eq!(classify_stop(&input), NotificationType::Error);
+    }
+
+    #[test]
+    fn stop_with_context_window_is_error() {
+        let input = stop_input(Some("The context window exceeded maximum length."));
+        assert_eq!(classify_stop(&input), NotificationType::Error);
+    }
+
+    #[test]
+    fn stop_error_case_insensitive() {
+        let input = stop_input(Some("api Rate Limit reached"));
+        assert_eq!(classify_stop(&input), NotificationType::Error);
+    }
+
+    #[test]
+    fn stop_user_mentions_error_not_classified() {
+        // D-03: User task descriptions mentioning "error" should NOT trigger Error classification.
+        // "api error" pattern refined to "api error:" / "api error occurred" to avoid false positives.
+        let input = stop_input(Some("Fixed the API error handling"));
+        assert_eq!(classify_stop(&input), NotificationType::TaskComplete);
+    }
+
+    #[test]
+    fn stop_with_question_mark_is_question() {
+        let input = stop_input(Some("Would you like me to continue?"));
+        assert_eq!(classify_stop(&input), NotificationType::Question);
+    }
+
+    #[test]
+    fn stop_question_with_trailing_whitespace() {
+        let input = stop_input(Some("Should I continue? \n"));
+        assert_eq!(classify_stop(&input), NotificationType::Question);
+    }
+
+    #[test]
+    fn stop_error_takes_priority_over_question() {
+        // D-02: Error > Question priority
+        let input = stop_input(Some("API rate limit exceeded. Should I retry?"));
+        assert_eq!(classify_stop(&input), NotificationType::Error);
+    }
+
+    #[test]
+    fn stop_none_message_is_task_complete() {
+        let input = stop_input(None);
+        assert_eq!(classify_stop(&input), NotificationType::TaskComplete);
+    }
+
+    #[test]
+    fn notification_permission_prompt() {
+        let input = notification_input(Some("permission_prompt"), Some("Bash: rm -rf"));
+        assert_eq!(classify_notification(&input), NotificationType::PermissionRequest);
+    }
+
+    #[test]
+    fn notification_missing_type_with_permission_message() {
+        // D-19: Bug #11964 fallback
+        let input = notification_input(None, Some("Tool needs permission to write"));
+        assert_eq!(classify_notification(&input), NotificationType::PermissionRequest);
+    }
+
+    #[test]
+    fn notification_other_type_is_question() {
+        // D-06/D-18: any notification_type other than "permission_prompt" -> Question
+        let input = notification_input(Some("idle_prompt"), Some("Are you still there?"));
+        assert_eq!(classify_notification(&input), NotificationType::Question);
+    }
+
+    #[test]
+    fn notification_no_type_no_permission_is_question() {
+        let input = notification_input(None, Some("Hello"));
+        assert_eq!(classify_notification(&input), NotificationType::Question);
     }
 }
