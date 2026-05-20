@@ -139,4 +139,100 @@ mod tests {
     fn test_escape_xml_empty() {
         assert_eq!(escape_xml(""), "");
     }
+
+    #[test]
+    fn xml_contains_hero_image() {
+        let xml = build_toast_xml(
+            "Task Complete",
+            "Done",
+            "my-project",
+            Some("C:/Users/test/AppData/Local/claude-win-notify/assets/hero-task-complete.png"),
+            "ms-winsoundevent:Notification.Default",
+            false,
+        );
+        assert!(xml.contains(r#"<image placement="hero" src="file:///C:/Users/test/AppData/Local/claude-win-notify/assets/hero-task-complete.png"/>"#));
+    }
+
+    #[test]
+    fn xml_omits_hero_when_none() {
+        let xml = build_toast_xml(
+            "Task Complete",
+            "Done",
+            "my-project",
+            None,
+            "ms-winsoundevent:Notification.Default",
+            false,
+        );
+        assert!(!xml.contains("<image"));
+    }
+
+    #[test]
+    fn xml_audio_default() {
+        let xml = build_toast_xml(
+            "Task Complete",
+            "Done",
+            "my-project",
+            None,
+            "ms-winsoundevent:Notification.Default",
+            false,
+        );
+        assert!(xml.contains(r#"<audio src="ms-winsoundevent:Notification.Default""#));
+    }
+
+    #[test]
+    fn xml_audio_error_no_loop() {
+        let xml = build_toast_xml(
+            "Error",
+            "API rate limit",
+            "my-project",
+            None,
+            "ms-winsoundevent:Notification.Looping.Alarm",
+            false,
+        );
+        assert!(xml.contains(r#"<audio src="ms-winsoundevent:Notification.Looping.Alarm" loop="false"/>"#));
+    }
+
+    #[test]
+    fn xml_escapes_special_chars_in_body() {
+        let xml = build_toast_xml(
+            "Title",
+            "a<b>c&d",
+            "project",
+            None,
+            "ms-winsoundevent:Notification.Default",
+            false,
+        );
+        assert!(xml.contains("a&lt;b&gt;c&amp;d"));
+        assert!(!xml.contains("a<b>c&d"));
+    }
+
+    #[test]
+    fn xml_hero_path_uses_forward_slashes() {
+        // Simulate what show_typed_toast does: replace backslashes with forward slashes
+        let windows_path = r"C:\Users\test\AppData\Local\claude-win-notify\assets\hero-error.png";
+        let forward_path = windows_path.replace('\\', "/");
+        let xml = build_toast_xml(
+            "Error",
+            "Oops",
+            "project",
+            Some(&forward_path),
+            "ms-winsoundevent:Notification.Looping.Alarm",
+            false,
+        );
+        assert!(xml.contains("file:///C:/Users/test/AppData/Local/claude-win-notify/assets/hero-error.png"));
+        assert!(!xml.contains('\\'));
+    }
+
+    #[test]
+    fn xml_attribution_shows_project_name() {
+        let xml = build_toast_xml(
+            "Title",
+            "Body",
+            "claude-win-notify",
+            None,
+            "ms-winsoundevent:Notification.Default",
+            false,
+        );
+        assert!(xml.contains(r#"<text placement="attribution">claude-win-notify</text>"#));
+    }
 }
