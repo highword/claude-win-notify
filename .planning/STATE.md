@@ -5,33 +5,34 @@
 See: .planning/PROJECT.md (updated 2026-05-15)
 
 **Core value:** Click-to-Focus 在 Windows 上真正可用——通知弹出后点击即可跳转到正确的终端窗口和标签页
-**Current focus:** Phase 2 - Hook & Toast Foundation
+**Current focus:** Phase 3 complete — ready for Phase 4
 
 ## Current Position
 
-Phase: 2 of 8 (Hook & Toast Foundation)
-Plan: 0 of ? — plans not yet created
-Status: Ready to plan
-Last activity: 2026-05-20 — Phase 1 complete, Rust confirmed
+Phase: 4 of 8 (Click-to-Focus Window Level) — Not started
+Plan: 0 of TBD
+Status: Not started
+Last activity: 2026-05-21 — Phase 3 verified and complete
 
 Progress: [░░░░░░░░░░] 0%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 0
-- Average duration: -
-- Total execution time: 0 hours
+- Total plans completed: 6
+- Average duration: ~4 min/plan
+- Total execution time: ~25 minutes
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| - | - | - | - |
+| 2 | 3 | 15 min | 5 min |
+| 3 | 3 | 10 min | 3.3 min |
 
 **Recent Trend:**
-- Last 5 plans: -
-- Trend: N/A
+- Last 5 plans: 03-01, 03-02, 03-03, 02-02, 02-03
+- Trend: Fast (parallel wave execution)
 
 *Updated after each plan completion*
 
@@ -48,6 +49,7 @@ Recent decisions affecting current work:
 - Toast validated: Rust 0.38 MB via windows-rs WinRT
 - Protocol activation validated: Rust parses claude-notify:// URIs correctly
 - SetForegroundWindow validated: Rust passes all 4 focus scenarios (Strategy 1 direct)
+- **PowerShell AUMID for Phase 2** — using PowerShell's AUMID for Toast identity until custom AUMID in Phase 7
 
 ### Pending Todos
 
@@ -68,6 +70,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-05-20
-Stopped at: Phase 1 complete, Phase 2 ready to discuss/plan
-Resume file: None
+Last session: 2026-05-21
+Stopped at: Phase 3 complete, ready for Phase 4
+Resume file: .planning/ROADMAP.md (Phase 4: Click-to-Focus Window Level)

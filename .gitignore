@@ -1,4 +1,5 @@
 # Build outputs
+/target
 spike/csharp/bin/
 spike/csharp/obj/
 spike/rust/target/

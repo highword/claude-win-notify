@@ -13,8 +13,8 @@ From tech spike to shipping installer: validate the Windows-native stack (C# Nat
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Tech Spike** - Validate C# NativeAOT vs Rust for Toast + Protocol activation + SetForegroundWindow ✓ 2026-05-20
-- [ ] **Phase 2: Hook & Toast Foundation** - Hook reads stdin JSON and displays a basic Windows Toast notification
-- [ ] **Phase 3: Notification Type Detection** - All 4 notification types detected and displayed with distinct visuals and sounds
+- [x] **Phase 2: Hook & Toast Foundation** - Hook reads stdin JSON and displays a basic Windows Toast notification ✓ 2026-05-20
+- [x] **Phase 3: Notification Type Detection** - All 4 notification types detected and displayed with distinct visuals and sounds ✓ 2026-05-21
 - [ ] **Phase 4: Click-to-Focus Window Level** - Toast click activates the correct terminal window via Protocol activation
 - [ ] **Phase 5: Click-to-Focus Tab Level** - Toast click switches to the correct tab in Windows Terminal and Warp
 - [ ] **Phase 6: Throttling & Deduplication** - Anti-spam mechanisms prevent notification bombardment
@@ -48,7 +48,11 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. The exe runs on Windows 10 1903+ and Windows 11 without errors
   4. CJK characters in file paths and project names display correctly in the Toast
   5. The compiled binary is a single exe under 15MB with zero runtime dependencies
-**Plans**: TBD
+**Plans**: 3 plans
+Plans:
+- [ ] 02-01-PLAN.md — Project scaffolding (Cargo.toml, modules, CLI skeleton, logging)
+- [ ] 02-02-PLAN.md — Hook stdin parsing + Toast notification display (core pipeline)
+- [ ] 02-03-PLAN.md — Integration tests, CI workflow, release binary verification
 
 ### Phase 3: Notification Type Detection
 **Goal**: Users receive contextually appropriate notifications for all 4 event types with distinct appearance
@@ -60,7 +64,14 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Question notification fires when Claude asks the user a question (? ending or AskUserQuestion)
   4. Error notification fires on API errors, session limits, or abnormal exits
   5. Each notification type has visually distinct styling, different sound, and shows project name from cwd
-**Plans**: TBD
+**Plans**: 3 plans
+Plans:
+- [x] 03-01-PLAN.md — Notification type classification logic & assets module
+- [x] 03-02-PLAN.md — Toast display integration (hero image + sound)
+- [x] 03-03-PLAN.md — Integration tests & end-to-end verification
+
+**Wave 1:** 03-01 (Classification + Assets)
+**Wave 2:** 03-02 (Toast Integration), 03-03 (Integration Tests) *(blocked on Wave 1 completion)*
 
 ### Phase 4: Click-to-Focus Window Level
 **Goal**: Clicking a Toast notification brings the correct terminal window to the foreground - the core differentiator works
@@ -127,8 +138,8 @@ Note: Phase 6 depends on Phase 3 (not Phase 5), so Phases 5 and 6 could theoreti
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Tech Spike | 1/5 | In Progress | - |
-| 2. Hook & Toast Foundation | 0/TBD | Not started | - |
-| 3. Notification Type Detection | 0/TBD | Not started | - |
+| 2. Hook & Toast Foundation | 3/3 | Complete | 2026-05-20 |
+| 3. Notification Type Detection | 3/3 | Complete | 2026-05-21 |
 | 4. Click-to-Focus Window Level | 0/TBD | Not started | - |
 | 5. Click-to-Focus Tab Level | 0/TBD | Not started | - |
 | 6. Throttling & Deduplication | 0/TBD | Not started | - |
