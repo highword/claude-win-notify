@@ -48,7 +48,11 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. The exe runs on Windows 10 1903+ and Windows 11 without errors
   4. CJK characters in file paths and project names display correctly in the Toast
   5. The compiled binary is a single exe under 15MB with zero runtime dependencies
-**Plans**: TBD
+**Plans**: 3 plans
+Plans:
+- [ ] 02-01-PLAN.md — Project scaffolding (Cargo.toml, modules, CLI skeleton, logging)
+- [ ] 02-02-PLAN.md — Hook stdin parsing + Toast notification display (core pipeline)
+- [ ] 02-03-PLAN.md — Integration tests, CI workflow, release binary verification
 
 ### Phase 3: Notification Type Detection
 **Goal**: Users receive contextually appropriate notifications for all 4 event types with distinct appearance
@@ -127,7 +131,7 @@ Note: Phase 6 depends on Phase 3 (not Phase 5), so Phases 5 and 6 could theoreti
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Tech Spike | 1/5 | In Progress | - |
-| 2. Hook & Toast Foundation | 0/TBD | Not started | - |
+| 2. Hook & Toast Foundation | 0/3 | Planned | - |
 | 3. Notification Type Detection | 0/TBD | Not started | - |
 | 4. Click-to-Focus Window Level | 0/TBD | Not started | - |
 | 5. Click-to-Focus Tab Level | 0/TBD | Not started | - |
