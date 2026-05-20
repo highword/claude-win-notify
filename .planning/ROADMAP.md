@@ -66,9 +66,9 @@ Plans:
   5. Each notification type has visually distinct styling, different sound, and shows project name from cwd
 **Plans**: 3 plans
 Plans:
-- [ ] 03-01-PLAN.md — Notification type classification logic & assets module
-- [ ] 03-02-PLAN.md — Toast display integration (hero image + sound)
-- [ ] 03-03-PLAN.md — Integration tests & end-to-end verification
+- [x] 03-01-PLAN.md — Notification type classification logic & assets module
+- [x] 03-02-PLAN.md — Toast display integration (hero image + sound)
+- [x] 03-03-PLAN.md — Integration tests & end-to-end verification
 
 **Wave 1:** 03-01 (Classification + Assets)
 **Wave 2:** 03-02 (Toast Integration), 03-03 (Integration Tests) *(blocked on Wave 1 completion)*
@@ -139,7 +139,7 @@ Note: Phase 6 depends on Phase 3 (not Phase 5), so Phases 5 and 6 could theoreti
 |-------|----------------|--------|-----------|
 | 1. Tech Spike | 1/5 | In Progress | - |
 | 2. Hook & Toast Foundation | 3/3 | Complete | 2026-05-20 |
-| 3. Notification Type Detection | 0/3 | Planned | - |
+| 3. Notification Type Detection | 3/3 | Complete | 2026-05-21 |
 | 4. Click-to-Focus Window Level | 0/TBD | Not started | - |
 | 5. Click-to-Focus Tab Level | 0/TBD | Not started | - |
 | 6. Throttling & Deduplication | 0/TBD | Not started | - |
