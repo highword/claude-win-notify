@@ -1,5 +1,5 @@
 use std::fs;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use crate::notification::NotificationType;
 
@@ -16,19 +16,18 @@ pub fn assets_dir() -> PathBuf {
         .join("assets")
 }
 
-/// Ensure the hero image for the given notification type exists on disk.
+/// Ensure the hero image for the given notification type exists in the specified directory.
 ///
-/// Extracts the embedded PNG to `%LOCALAPPDATA%\claude-win-notify\assets\` on first run.
+/// This is the core logic function that extracts the embedded PNG to the given directory.
 /// Returns the file path on success, or None on IO error (graceful degradation per D-09).
-pub fn ensure_hero_image(ntype: NotificationType) -> Option<PathBuf> {
-    let dir = assets_dir();
+pub fn ensure_hero_image_in(dir: &Path, ntype: NotificationType) -> Option<PathBuf> {
     let path = dir.join(ntype.hero_filename());
 
     if path.exists() {
         return Some(path);
     }
 
-    if let Err(e) = fs::create_dir_all(&dir) {
+    if let Err(e) = fs::create_dir_all(dir) {
         crate::log::log_error(&format!("Failed to create assets dir: {}", e));
         return None;
     }
@@ -40,6 +39,14 @@ pub fn ensure_hero_image(ntype: NotificationType) -> Option<PathBuf> {
     }
 
     Some(path)
+}
+
+/// Ensure the hero image for the given notification type exists on disk.
+///
+/// Extracts the embedded PNG to `%LOCALAPPDATA%\claude-win-notify\assets\` on first run.
+/// Returns the file path on success, or None on IO error (graceful degradation per D-09).
+pub fn ensure_hero_image(ntype: NotificationType) -> Option<PathBuf> {
+    ensure_hero_image_in(&assets_dir(), ntype)
 }
 
 /// Get the embedded PNG data for a notification type.
