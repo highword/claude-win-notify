@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches: [main, "phase/**"]
+  pull_request:
+    branches: [main]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo registry and build
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-
+
+      - name: Build (debug)
+        run: cargo build
+
+      - name: Run unit tests
+        run: cargo test --lib
+
+      - name: Run integration tests
+        run: cargo test --test integration
+
+      - name: Build (release)
+        run: cargo build --release
+
+      - name: Check binary size (must be < 15MB)
+        run: |
+          $size = (Get-Item target\release\claude-win-notify.exe).Length
+          $sizeMB = [math]::Round($size / 1MB, 2)
+          Write-Host "Binary size: $sizeMB MB ($size bytes)"
+          if ($size -gt 15728640) {
+            Write-Host "FAIL: Binary exceeds 15MB limit!"
+            exit 1
+          }
+          Write-Host "PASS: Binary is under 15MB limit"
+        shell: pwsh
+
+      - name: Verify PE executable
+        run: |
+          $bytes = [System.IO.File]::ReadAllBytes("target\release\claude-win-notify.exe")
+          if ($bytes[0] -eq 0x4D -and $bytes[1] -eq 0x5A) {
+            Write-Host "PASS: Valid PE executable"
+          } else {
+            Write-Host "FAIL: Not a valid PE"
+            exit 1
+          }
+        shell: pwsh
