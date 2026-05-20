@@ -1,6 +1,8 @@
 mod cli;
 mod error;
+mod hook;
 mod log;
+mod toast;
 
 use clap::Parser;
 use cli::{Cli, Commands};
@@ -15,11 +17,11 @@ fn main() {
                 eprintln!("This command is meant to be invoked by Claude Code hooks.");
                 std::process::exit(1);
             }
-            // Placeholder — implemented in Plan 02
-            std::process::exit(0);
+            if let Err(e) = hook::handle_hook() {
+                log::log_error(&format!("Hook error: {}", e));
+            }
         }
         Commands::Focus { uri: _ } => {
-            // Placeholder — implemented in Phase 4
             eprintln!("Focus subcommand not yet implemented");
             std::process::exit(1);
         }
