@@ -1,5 +1,7 @@
 use serde::Deserialize;
 
+use crate::notification::{classify_stop, classify_notification, body_text};
+
 #[derive(Deserialize, Debug)]
 pub struct HookInput {
     pub session_id: String,
@@ -42,25 +44,27 @@ fn handle_stop(input: &HookInput) -> Result<(), crate::error::AppError> {
         return Ok(());
     }
 
-    let project_name = std::path::Path::new(&input.cwd)
-        .file_name()
-        .unwrap_or_default()
-        .to_string_lossy()
-        .to_string();
+    let ntype = classify_stop(input);
+    let project_name = extract_project_name(&input.cwd);
+    let body = body_text(ntype, input);
 
-    crate::toast::show_toast("Claude Code", "\u{2714} Task Complete", &project_name)
+    crate::toast::show_typed_toast(ntype, &body, &project_name)
 }
 
 fn handle_notification(input: &HookInput) -> Result<(), crate::error::AppError> {
-    let project_name = std::path::Path::new(&input.cwd)
+    let ntype = classify_notification(input);
+    let project_name = extract_project_name(&input.cwd);
+    let body = body_text(ntype, input);
+
+    crate::toast::show_typed_toast(ntype, &body, &project_name)
+}
+
+fn extract_project_name(cwd: &str) -> String {
+    std::path::Path::new(cwd)
         .file_name()
         .unwrap_or_default()
         .to_string_lossy()
-        .to_string();
-
-    let body = input.message.as_deref().unwrap_or("New notification");
-
-    crate::toast::show_toast("Claude Code", body, &project_name)
+        .to_string()
 }
 
 #[cfg(test)]
