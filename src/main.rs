@@ -1,7 +1,9 @@
+mod assets;
 mod cli;
 mod error;
 mod hook;
 mod log;
+mod notification;
 mod toast;
 
 use clap::Parser;
